@@ -20,6 +20,12 @@ then(response =>
   },[userData])
 
 const handleSubmit = async()=>{
+  if(Name === ""){
+    alert("please enter your name")
+  }
+  else if(Age === ""){
+    alert("please enter your age")
+  }else{
   const response =  await fetch("http://localhost:5000/addUserData",{
     method : "POST",
     headers :{
@@ -30,6 +36,8 @@ const handleSubmit = async()=>{
   setName("")
   setAge("")
 }
+}
+
 
   return (
     <div>
