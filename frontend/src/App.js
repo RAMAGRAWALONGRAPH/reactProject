@@ -1,9 +1,23 @@
 import './App.css';
-import React, { useState } from 'react';
+import React, { useState , useEffect} from 'react';
 
 function App() {
   const [Name, setName] = useState("")
   const[Age, setAge] = useState("")
+  const [userData, setUserData] = useState([])
+
+
+  useEffect(()=>{
+fetch("http://localhost:5000/getUserData").
+then(response =>
+  response.json()
+).then(data =>
+  setUserData(data)
+)
+.catch(error =>
+  console.error("Error fetching data", error))
+
+  },[userData])
 
 const handleSubmit = async()=>{
   const response =  await fetch("http://localhost:5000/addUserData",{
@@ -18,6 +32,7 @@ const handleSubmit = async()=>{
 }
 
   return (
+    <div>
     <div  className='form'>
     <h2> Please fill your details</h2>
     <label>Name</label>
@@ -27,6 +42,30 @@ const handleSubmit = async()=>{
     <input type="number" value={Age} onChange={(e)=>setAge(e.target.value)} />
     <br/>
     <button className="button" onClick={handleSubmit}>Submit</button>
+    </div>
+    
+      <table >
+        <thead>
+          <tr>
+          <th>Name</th>
+          <th>Age</th>
+          </tr>
+        </thead>
+        <tbody>
+        {userData.map((user)=>(
+          <tr key={user._id}>
+          <td>{user.Name}</td>
+          <td>{user.Age}</td>
+        </tr>
+        
+    
+  
+))}
+</tbody>
+      </table>
+
+
+
     </div>
   );
 }

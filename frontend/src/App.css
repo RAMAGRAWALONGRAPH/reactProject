@@ -19,3 +19,18 @@ input{
 background-color: rgba(0, 0, 255, 0.473);
 
 }
+table{
+  width: 50%;
+  text-align: left;
+  background-color: aqua;
+  margin: 10px;
+  border: 2px solid black;
+  border-collapse: collapse;
+}
+table th{
+  border: 2px solid black;
+ 
+}
+tbody tr td{
+  border: 1px solid black;
+}

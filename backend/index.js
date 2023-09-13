@@ -19,6 +19,12 @@ const {Name, Age} = req.body
     res.json(user)
 })
 
+app.get("/getUserData", async(req, res)=>{
+  
+     const user = await User.find() 
+     res.json(user)
+    })
+
 
 
 
