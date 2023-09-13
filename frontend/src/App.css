@@ -1,0 +1,21 @@
+.button{
+  width: 100px;
+  height: 30px;
+  margin-top: 20px;
+  background-color: blue;
+  border-radius: 10px;
+  cursor: pointer;
+  border: none;
+}
+input{
+  margin-top: 20px;
+  margin-left: 20px;
+  border-radius: 5px;
+}
+.form{
+  margin-left: 20px;
+}
+.button:hover{
+background-color: rgba(0, 0, 255, 0.473);
+
+}
