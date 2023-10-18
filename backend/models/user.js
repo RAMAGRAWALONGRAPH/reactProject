@@ -7,6 +7,9 @@ const UserSchema = new mongoose.Schema({
     },
     Age: {
         type: Number
+    },
+    profileImage: {
+        type: String
     }
 })
 

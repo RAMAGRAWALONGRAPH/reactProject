@@ -29,8 +29,14 @@ table{
 }
 table th{
   border: 2px solid black;
- 
 }
 tbody tr td{
   border: 1px solid black;
 }
+
+tbody tr td:last-child {
+  color: red;
+  cursor: pointer;
+}
+
+

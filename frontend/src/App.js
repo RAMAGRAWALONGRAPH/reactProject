@@ -2,24 +2,61 @@ import './App.css';
 import React, { useState , useEffect} from 'react';
 
 function App() {
-  const [Name, setName] = useState("")
-  const[Age, setAge] = useState("")
-  const [userData, setUserData] = useState([])
 
+  const [Name, setName] = useState("")
+  const [updatedName, setUpdatedName] = useState("")
+  const [Age, setAge] = useState("")
+  const [updatedAge, setUpdatedAge] = useState("")
+  const [profileImage, setProfileImage] = useState(null);
+  const [userData, setUserData] = useState([])
+  const [editUserId, setEditUserId] = useState(null)
 
   useEffect(()=>{
-fetch("http://localhost:5000/getUserData").
-then(response =>
-  response.json()
-).then(data =>
-  setUserData(data)
-)
-.catch(error =>
-  console.error("Error fetching data", error))
+    fetch("http://localhost:5000/getUserData").
+    then(response =>
+      response.json()
+    ).then(data =>
+      setUserData(data)
+    )
+    .catch(error =>
+      console.error("Error fetching data", error))
+    
+      },[userData])
+    
+  // const handleFileChange = (e) => {
+  //   setProfileImage(e.target.files[0]);
+  //   console.log(profileImage)
+  // };
 
-  },[userData])
+const handleEdit = (id) =>{
+  const user =  userData.find((user)=>(
+ user._id === id
+  ))
+  setUpdatedName(user.Name)
+  setUpdatedAge(user.Age)
+  setEditUserId(user._id)
+}
 
+const handleUpdate = async(id) =>{
+  const response =  await fetch(`http://localhost:5000/editUserData/${id}`,{
+    method : "PUT",
+    headers :{
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({Name : updatedName, Age : updatedAge})
+  })
+    const updatedUser = {_id: editUserId, Name : updatedName, Age : updatedAge}
+  const updatedUserData = userData.map((user)=>(
+    user._id === editUserId ? updatedUser : user
+  ))
+  setUserData(updatedUserData)
+  setEditUserId(null)
+  setUpdatedName("")
+  setUpdatedAge("")
+}
+  
 const handleSubmit = async()=>{
+
   if(Name === ""){
     alert("please enter your name")
   }
@@ -31,11 +68,27 @@ const handleSubmit = async()=>{
     headers :{
       "Content-Type": "application/json"
     },
-    body: JSON.stringify({Name : Name, Age : Age})
+    body: JSON.stringify({Name : Name, Age : Age, profileImage : profileImage})
   })
+  console.log(profileImage)
   setName("")
   setAge("")
+  setProfileImage(null)
+  console.log(profileImage)
 }
+}
+
+const handleDelete = async(id)=>{
+const response =  await fetch(`http://localhost:5000/deleteUserData/${id}`,{
+    method : "DELETE",
+    headers :{
+      "Content-Type": "application/json"
+    },
+ 
+  })
+    const user = userData.filter((user)=> 
+    user._id !== id)
+    setUserData(user)
 }
 
 
@@ -44,12 +97,22 @@ const handleSubmit = async()=>{
     <div  className='form'>
     <h2> Please fill your details</h2>
     <label>Name</label>
-    <input type="text" value={Name} onChange={(e)=>setName(e.target.value)} />
+    <input type="text" value={editUserId ? updatedName : Name} onChange={editUserId ? (e)=>setUpdatedName(e.target.value):(e)=>setName(e.target.value)}/>
     <br/>
     <label>Age</label>
-    <input type="number" value={Age} onChange={(e)=>setAge(e.target.value)} />
+    <input type="number" value={editUserId ? updatedAge: Age} onChange={editUserId ? (e)=>setUpdatedAge(e.target.value) : (e)=>setAge(e.target.value)}/>
     <br/>
-    <button className="button" onClick={handleSubmit}>Submit</button>
+    <br />
+        {/* <label htmlFor="profileImage">Profile Image:</label>
+        <input
+          type="file"
+          id="profileImage"
+          name="profileImage"
+          accept="image/*"
+          onChange={handleFileChange}
+        />
+        <br /> */}
+    <button className="button" onClick={editUserId ? handleUpdate : handleSubmit}>{editUserId ? "Update" : "Submit"}</button>
     </div>
     
       <table >
@@ -64,6 +127,8 @@ const handleSubmit = async()=>{
           <tr key={user._id}>
           <td>{user.Name}</td>
           <td>{user.Age}</td>
+          <td  onClick={()=>handleEdit(user._id)}>Edit</td>
+          <td className="delete" onClick={()=>handleDelete(user._id)}>Delete</td>
         </tr>
         
     
@@ -79,3 +144,4 @@ const handleSubmit = async()=>{
 }
 
 export default App;
+
